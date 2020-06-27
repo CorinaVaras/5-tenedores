@@ -1,1 +1,1 @@
-# Restaurant 🍽️
+# Restaurants 🍽️
