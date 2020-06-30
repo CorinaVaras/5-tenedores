@@ -5,11 +5,13 @@ import { isEmpty } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { validateEmail } from "../../utils/validations";
-import Loading from "../Loading";
+import Loading from "../loading";
 
-export default function LoginForm(props) {
+export default function LoginForm({ toastRef }) {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(defaultFormValue());
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
@@ -71,6 +73,7 @@ export default function LoginForm(props) {
         buttonStyle={styles.btnLogin}
         onPress={onSubmit}
       />
+      <Loading isVisible={loading} text="Iniciando sesión" />
     </View>
   );
 }
