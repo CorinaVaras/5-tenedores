@@ -3,7 +3,9 @@ import { StyleSheet, View, Text } from "react-native";
 import { Avatar } from "react-native-elements";
 
 export default function InfoUser(props) {
-  const { userInfo } = props;
+  const {
+    userInfo: { uid, photoURL, displayName, email },
+  } = props;
 
   return (
     <View style={styles.viewUserInfo}>
@@ -12,10 +14,17 @@ export default function InfoUser(props) {
         size="large"
         showEditButton
         containerStyle={styles.userInfoAvatar}
+        source={
+          photoURL
+            ? { uri: photoURL }
+            : require("../../../assets/img/avatar-default.jpg")
+        }
       />
       <View>
-        <Text style={styles.displayName}>Corina Celeste Varas</Text>
-        <Text>corinacvp@gmail.com</Text>
+        <Text style={styles.displayName}>
+          {displayName ? displayName : "Anónimo"}
+        </Text>
+        <Text>{email ? email : "Social media"}</Text>
       </View>
     </View>
   );
