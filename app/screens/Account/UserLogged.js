@@ -1,17 +1,28 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import Toast from "react-native-easy-toast";
 import * as firebase from "firebase";
 import Loading from "../../components/loading";
+import InfoUser from "../../components/account/InfoUser";
 
 export default function UserLogged() {
+  const [userInfo, setUserInfo] = useState(null);
   const toastRef = useRef();
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const user = await firebase.auth().currentUser;
+      setUserInfo(user);
+    })();
+  }, []);
+
   return (
     <View style={styles.viewUserInfo}>
-      <Text> InfoUser COMPONENTE ... </Text>
+      {userInfo && <InfoUser userInfo={userInfo} />}
+
       <Text> AccountOptions COMPONENTE... </Text>
 
       <Button
