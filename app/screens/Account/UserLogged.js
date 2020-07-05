@@ -8,9 +8,10 @@ import InfoUser from "../../components/account/InfoUser";
 
 export default function UserLogged() {
   const [userInfo, setUserInfo] = useState(null);
-  const toastRef = useRef();
+
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
+  const toastRef = useRef();
 
   useEffect(() => {
     (async () => {
@@ -21,7 +22,7 @@ export default function UserLogged() {
 
   return (
     <View style={styles.viewUserInfo}>
-      {userInfo && <InfoUser userInfo={userInfo} />}
+      {userInfo && <InfoUser userInfo={userInfo} toastRef={toastRef} />}
 
       <Text> AccountOptions COMPONENTE... </Text>
 
