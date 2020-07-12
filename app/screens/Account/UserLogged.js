@@ -5,9 +5,11 @@ import Toast from "react-native-easy-toast";
 import * as firebase from "firebase";
 import Loading from "../../components/loading";
 import InfoUser from "../../components/account/InfoUser";
+import AccountOptions from "../../components/account/AccountOptions";
 
 export default function UserLogged() {
   const [userInfo, setUserInfo] = useState(null);
+  const [reloadUserInfo, setReloadUserInfo] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
@@ -18,13 +20,25 @@ export default function UserLogged() {
       const user = await firebase.auth().currentUser;
       setUserInfo(user);
     })();
-  }, []);
+    setReloadUserInfo(false);
+  }, [reloadUserInfo]);
 
   return (
     <View style={styles.viewUserInfo}>
-      {userInfo && <InfoUser userInfo={userInfo} toastRef={toastRef} />}
+      {userInfo && (
+        <InfoUser
+          userInfo={userInfo}
+          toastRef={toastRef}
+          setLoading={setLoading}
+          setLoadingText={setLoadingText}
+        />
+      )}
 
-      <Text> AccountOptions COMPONENTE... </Text>
+      <AccountOptions
+        userInfo={userInfo}
+        toastRef={toastRef}
+        setReloadUserInfo={setReloadUserInfo}
+      />
 
       <Button
         title="Cerrar Sesión"

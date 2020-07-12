@@ -9,8 +9,11 @@ export default function InfoUser(props) {
   const {
     userInfo: { uid, photoURL, displayName, email },
     toastRef,
+    setLoading,
+    setLoadingText,
   } = props;
 
+  // Funcion que se ocupa de pedir los permisos y obtener imagen
   const changeAvatar = async () => {
     const resultPermission = await Permissions.askAsync(
       Permissions.CAMERA_ROLL
@@ -25,9 +28,52 @@ export default function InfoUser(props) {
         allowsEditing: true,
         aspect: [4, 3],
       });
-
-      console.log(result);
+      //result te devuelve un objeto con toda la información que trae la imagen
+      if (result.cancelled) {
+        toastRef.current.show("Has cerrado la selección de imagenes");
+      } else {
+        uploadImage(result.uri)
+          .then(() => {
+            //ejecuto funcion que envia la foto al objeto del usuario
+            updatePhotoUrl();
+          })
+          .catch(() => {
+            toastRef.current.show("Error al actualizar el avatar");
+          });
+      }
     }
+  };
+
+  // Funcion para subir la imagen, recibe por params la uri del objeto de la imagen
+  const uploadImage = async (uri) => {
+    //llamamos al componente de loading
+    setLoadingText("Actualizando Avatar");
+    setLoading(true);
+    const response = await fetch(uri);
+    // objeto que vamos a subir al storage
+    const blob = await response.blob();
+    // Creamos la referencia para subirlo
+    const ref = firebase.storage().ref().child(`avatar/${uid}`);
+    // Ahora lo enviamos a firebase
+    return ref.put(blob);
+  };
+
+  // Funcion que actualiza la foto seleccionada al objeto photoURL del user de firebase
+  const updatePhotoUrl = () => {
+    firebase
+      .storage()
+      .ref(`avatar/${uid}`)
+      .getDownloadURL()
+      .then(async (response) => {
+        const update = {
+          photoURL: response,
+        };
+        await firebase.auth().currentUser.updateProfile(update);
+        setLoading(false);
+      })
+      .catch(() => {
+        toastRef.current.show("Error al actualizar el avatar");
+      });
   };
 
   return (
