@@ -18,6 +18,12 @@
       "supportsTablet": false
     },
     "android": {
+      "package": "com.corinavaras.tenedores",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBgWXOHn-csmRPOEk1HOFG_8JbDrPc6_E4"
+        }
+      },
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",

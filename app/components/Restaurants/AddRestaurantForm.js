@@ -51,7 +51,7 @@ export default function AddRestaurantForm(props) {
           })
           .then(() => {
             setIsLoading(false);
-            console.log("OKEY");
+            navigation.navigate("restaurants");
           })
           .catch(() => {
             setIsLoading(false);
@@ -102,7 +102,7 @@ export default function AddRestaurantForm(props) {
         setImagesSelected={setImagesSelected}
       />
       <Button
-        title="Crear restaurant"
+        title="Crear restaurante"
         onPress={AddRestaurant}
         buttonStyle={styles.btnAddRestaurant}
       />
