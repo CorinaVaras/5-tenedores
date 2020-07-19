@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
-import { Rating } from "react-native-elements";
+import { Rating, ListItem, Icon } from "react-native-elements";
+import { map } from "lodash";
 import Loading from "../../components/loading";
 import Carousel from "../../components/Carousel";
 import Map from "../../components/Map";
+import ListReviews from "../../components/Restaurants/ListReviews";
 
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
@@ -53,6 +55,7 @@ export default function Restaurant(props) {
         name={restaurant.name}
         address={restaurant.address}
       />
+      <ListReviews navigation={navigation} idRestaurant={restaurant.id} />
     </ScrollView>
   );
 }
@@ -78,12 +81,34 @@ function TitleRestaurant(props) {
 
 function RestaurantInfo(props) {
   const { location, name, address } = props;
+
+  const listInfo = [
+    {
+      text: address,
+      iconName: "map-marker",
+      iconType: "material-community",
+      action: null,
+    },
+  ];
+
   return (
     <View style={styles.viewRestaurantInfo}>
       <Text style={styles.restaurantInfoTitle}>
         Información sobre el restaurante
       </Text>
-      <Map location={location} name={name} height={100} />
+      <Map location={location} name={name} height={150} />
+      {map(listInfo, (item, index) => (
+        <ListItem
+          key={index}
+          title={item.text}
+          leftIcon={{
+            name: item.iconName,
+            type: item.iconType,
+            color: "#00a680",
+          }}
+          containerStyle={styles.containerListItem}
+        />
+      ))}
     </View>
   );
 }
@@ -116,5 +141,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  containerListItem: {
+    borderBottomColor: "#d8d8d8",
+    borderBottomWidth: 1,
   },
 });
