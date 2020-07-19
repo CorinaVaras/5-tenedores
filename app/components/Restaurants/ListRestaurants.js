@@ -13,7 +13,6 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function ListRestaurants(props) {
   const { restaurants, handleLoadMore, isLoading } = props;
-
   const navigation = useNavigation();
 
   return (
@@ -45,10 +44,7 @@ function Restaurant(props) {
   const imageRestaurant = images ? images[0] : null;
 
   const goRestaurant = () => {
-    navigation.navigate("restaurant", {
-      id,
-      name,
-    });
+    navigation.navigate("restaurant", { id, name });
   };
 
   return (
