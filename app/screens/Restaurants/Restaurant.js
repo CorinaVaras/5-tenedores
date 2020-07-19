@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
 import Loading from "../../components/loading";
+import Carousel from "../../components/Carousel";
 
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
 const db = firebase.firestore(firebaseApp);
+const screenWidth = Dimensions.get("window").width;
 
 export default function Restaurant(props) {
   const { navigation, route } = props;
@@ -31,8 +33,19 @@ export default function Restaurant(props) {
   if (!restaurant) return <Loading isVisible={true} text="Cargando..." />;
 
   return (
-    <View>
-      <Text>RESTAURANTE INFO</Text>
-    </View>
+    <ScrollView vertical style={styles.viewBody}>
+      <Carousel
+        arrayImages={restaurant.images}
+        height={250}
+        width={screenWidth}
+      />
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  viewBody: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+});
