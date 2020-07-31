@@ -6,6 +6,18 @@ export default function AddReviewRestaurant(props) {
   const { navigation, route } = props;
   const { idRestaurant } = route.params;
 
+  const [rating, setRating] = useState(null);
+  const [title, setTitle] = useState("");
+  const [review, setReview] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Función que va a enviar el comentario
+  const addReview = () => {
+    console.log("rating", rating);
+    console.log("title", title);
+    console.log("review", review);
+  };
+
   return (
     <View style={styles.viewBody}>
       <View style={styles.viewRating}>
@@ -24,9 +36,10 @@ export default function AddReviewRestaurant(props) {
           inputContainerStyle={styles.textArea}
         />
         <Button
-          title="Enviar Comnetario"
+          title="Enviar Comentario"
           containerStyle={styles.btnContainer}
           buttonStyle={styles.btn}
+          onPress={addReview}
         />
       </View>
     </View>
