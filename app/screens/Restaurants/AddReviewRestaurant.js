@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { AirbnbRating, Button, Input } from "react-native-elements";
 import Toast from "react-native-easy-toast";
 import Loading from "../../components/loading";
@@ -13,40 +13,39 @@ const db = firebase.firestore(firebaseApp);
 export default function AddReviewRestaurant(props) {
   const { navigation, route } = props;
   const { idRestaurant } = route.params;
-
   const [rating, setRating] = useState(null);
   const [title, setTitle] = useState("");
   const [review, setReview] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const toasRef = useRef();
+  const toastRef = useRef();
 
-  // Función que va a enviar el comentario
-  const addReview = () => {
+  const addRevew = () => {
     if (!rating) {
-      toasRef.current.show("No has dado ninguna puntuación");
+      toastRef.current.show("No has dado ninguna putuacion");
     } else if (!title) {
-      toasRef.current.show("El titulo es obligatorio");
+      toastRef.current.show("El titulo es oblogatorio");
     } else if (!review) {
-      toasRef.current.show("El comentario es obligatorio");
+      toastRef.current.show("El comentatio es obligatorio");
     } else {
       setIsLoading(true);
       const user = firebase.auth().currentUser;
-      const payload = {
+      const paylod = {
         idUser: user.uid,
         avatarUser: user.photoURL,
         idRestaurant: idRestaurant,
         title: title,
-        rewiew: review,
+        review: review,
         rating: rating,
         createAt: new Date(),
       };
+
       db.collection("reviews")
-        .add(payload)
+        .add(paylod)
         .then(() => {
           updateRestaurant();
         })
         .catch(() => {
-          toasRef.current.show("Error al enviar el comentario");
+          toastRef.current.show("Error al enviar la review");
           setIsLoading(false);
         });
     }
@@ -79,10 +78,12 @@ export default function AddReviewRestaurant(props) {
       <View style={styles.viewRating}>
         <AirbnbRating
           count={5}
-          reviews={["Pésimo", "Deficiente", "Normal", "Muy bueno", "Excelente"]}
+          reviews={["Pésimo", "Deficiente", "Normal", "Muy Bueno", "Excelente"]}
           defaultRating={0}
           size={35}
-          onFinishRating={(value) => setRating(value)}
+          onFinishRating={(value) => {
+            setRating(value);
+          }}
         />
       </View>
       <View style={styles.formReview}>
@@ -92,20 +93,20 @@ export default function AddReviewRestaurant(props) {
           onChange={(e) => setTitle(e.nativeEvent.text)}
         />
         <Input
-          placeholder="Escribe tu comentario aquí"
+          placeholder="Comentario..."
           multiline={true}
           inputContainerStyle={styles.textArea}
           onChange={(e) => setReview(e.nativeEvent.text)}
         />
         <Button
-          title="Enviar Comentario"
+          title="Enviar Comnetario"
           containerStyle={styles.btnContainer}
           buttonStyle={styles.btn}
-          onPress={addReview}
+          onPress={addRevew}
         />
-        <Toast ref={toasRef} position="center" opacity={0.9} />
-        <Loading isVisible={isLoading} text="Enviando comentario" />
       </View>
+      <Toast ref={toastRef} position="center" opacity={0.9} />
+      <Loading isVisible={isLoading} text="Enviando comenario" />
     </View>
   );
 }

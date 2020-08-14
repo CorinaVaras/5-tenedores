@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Button, Avatar, Rating } from "react-native-elements";
+import { map } from "lodash";
 
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
@@ -63,6 +64,43 @@ export default function ListReviews(props) {
           </Text>
         </View>
       )}
+
+      {map(reviews, (review, index) => (
+        <Review key={index} review={review} />
+      ))}
+    </View>
+  );
+}
+
+function Review(props) {
+  const { title, review, rating, createAt, avatarUser } = props.review;
+  const createReview = new Date(createAt.seconds * 1000);
+
+  return (
+    <View style={styles.viewReview}>
+      <View style={styles.viewImageAvatar}>
+        <Avatar
+          size="large"
+          rounded
+          containerStyle={styles.imageAvatarUser}
+          source={
+            avatarUser
+              ? { uri: avatarUser }
+              : require("../../../assets/img/avatar-default.jpg")
+          }
+        />
+      </View>
+      <View style={styles.viewInfo}>
+        <Text style={styles.reviewTitle}>{title}</Text>
+        <Text style={styles.reviewText}>{review}</Text>
+        <Rating imageSize={15} startingValue={rating} readonly />
+        <Text style={styles.reviewDate}>
+          {createReview.getDate()}/{createReview.getMonth() + 1}/
+          {createReview.getFullYear()} - {createReview.getHours()}:
+          {createReview.getMinutes() < 10 ? "0" : ""}
+          {createReview.getMinutes()}
+        </Text>
+      </View>
     </View>
   );
 }
