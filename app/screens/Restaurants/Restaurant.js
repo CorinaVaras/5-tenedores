@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
 import { Rating, ListItem, Icon } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
+import Toast from "react-native-easy-toast";
 import { map } from "lodash";
 import Loading from "../../components/loading";
 import Carousel from "../../components/Carousel";
@@ -18,11 +19,17 @@ const screenWidth = Dimensions.get("window").width;
 export default function Restaurant(props) {
   const { navigation, route } = props;
   const { id, name } = route.params;
-
   const [restaurant, setRestaurant] = useState(null);
   const [rating, setRating] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(true); // si esta add en fav el restaurant
+  const [userLogged, setUserLogged] = useState(false);
+  const toastRef = useRef();
 
   navigation.setOptions({ title: name });
+
+  firebase.auth().onAuthStateChanged((user) => {
+    user ? setUserLogged(true) : setUserLogged(false);
+  });
 
   // Recuperamos la data de este restaurant con el id
   useFocusEffect(
@@ -39,6 +46,14 @@ export default function Restaurant(props) {
     }, [])
   );
 
+  const addFavorite = () => {
+    console.log("add favorite");
+  };
+
+  const removeFavorite = () => {
+    console.log("remove favorite");
+  };
+
   if (!restaurant) return <Loading isVisible={true} text="Cargando..." />;
 
   return (
@@ -46,9 +61,9 @@ export default function Restaurant(props) {
       <View style={styles.viewFavorite}>
         <Icon
           type="material-community"
-          name="heart"
-          onPress={() => console.log("Add favorites")}
-          color="#000"
+          name={isFavorite ? "heart" : "heart-outline"}
+          onPress={isFavorite ? removeFavorite : addFavorite}
+          color={isFavorite ? "#000" : "000"}
           size={35}
           underlayColor="transparent"
         />
@@ -69,6 +84,7 @@ export default function Restaurant(props) {
         address={restaurant.address}
       />
       <ListReviews navigation={navigation} idRestaurant={restaurant.id} />
+      <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );
 }
