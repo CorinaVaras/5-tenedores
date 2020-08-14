@@ -21,7 +21,7 @@ export default function Restaurant(props) {
   const { id, name } = route.params;
   const [restaurant, setRestaurant] = useState(null);
   const [rating, setRating] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(true); // si esta add en fav el restaurant
+  const [isFavorite, setIsFavorite] = useState(false); // si esta add en fav el restaurant
   const [userLogged, setUserLogged] = useState(false);
   const toastRef = useRef();
 
@@ -47,7 +47,23 @@ export default function Restaurant(props) {
   );
 
   const addFavorite = () => {
-    console.log("add favorite");
+    if (!userLogged) {
+      toastRef.current.show("Tienes que estar logeado");
+    } else {
+      const payload = {
+        idUser: firebase.auth().currentUser.uid,
+        idRestaurant: restaurant,
+      };
+      db.collection("favorites")
+        .add(payload)
+        .then(() => {
+          setIsFavorite(true);
+          toastRef.current.show("Añadido a favoritos correctamente");
+        })
+        .catch(() => {
+          toastRef.current.show("Error, intenta de nuevo");
+        });
+    }
   };
 
   const removeFavorite = () => {
@@ -63,7 +79,7 @@ export default function Restaurant(props) {
           type="material-community"
           name={isFavorite ? "heart" : "heart-outline"}
           onPress={isFavorite ? removeFavorite : addFavorite}
-          color={isFavorite ? "#000" : "000"}
+          color={isFavorite ? "#f00" : "#000"}
           size={35}
           underlayColor="transparent"
         />
