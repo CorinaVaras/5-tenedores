@@ -5,7 +5,7 @@ import { isEmpty } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import * as firebase from "firebase";
 import { validateEmail } from "../../utils/validations";
-import Loading from "../loading";
+import Loading from "../Loading";
 
 export default function LoginForm({ toastRef }) {
   const [showPassword, setShowPassword] = useState(false);

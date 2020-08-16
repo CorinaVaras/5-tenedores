@@ -5,7 +5,7 @@ import { validateEmail } from "../../utils/validations";
 import { size, isEmpty } from "lodash";
 import * as firebase from "firebase";
 import { useNavigation } from "@react-navigation/native";
-import Loading from "../loading";
+import Loading from "../Loading";
 
 export default function RegisterForm({ toastRef }) {
   const [showPassword, setShowPassword] = useState(false);

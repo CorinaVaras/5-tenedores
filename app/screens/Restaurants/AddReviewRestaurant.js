@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { AirbnbRating, Button, Input } from "react-native-elements";
 import Toast from "react-native-easy-toast";
-import Loading from "../../components/loading";
+import Loading from "../../components/Loading";
 
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";

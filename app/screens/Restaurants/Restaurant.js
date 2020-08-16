@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import { Rating, ListItem, Icon } from "react-native-elements";
+import { map } from "lodash";
 import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-easy-toast";
-import { map } from "lodash";
-import Loading from "../../components/loading";
+import Loading from "../../components/Loading";
 import Carousel from "../../components/Carousel";
 import Map from "../../components/Map";
 import ListReviews from "../../components/Restaurants/ListReviews";
@@ -21,7 +21,7 @@ export default function Restaurant(props) {
   const { id, name } = route.params;
   const [restaurant, setRestaurant] = useState(null);
   const [rating, setRating] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false); // si esta add en fav el restaurant
+  const [isFavorite, setIsFavorite] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
   const toastRef = useRef();
 
@@ -31,7 +31,6 @@ export default function Restaurant(props) {
     user ? setUserLogged(true) : setUserLogged(false);
   });
 
-  // Recuperamos la data de este restaurant con el id
   useFocusEffect(
     useCallback(() => {
       db.collection("restaurants")
@@ -45,7 +44,7 @@ export default function Restaurant(props) {
         });
     }, [])
   );
-  // Obteniendo si el restaurant lo tenemos en fav's
+
   useEffect(() => {
     if (userLogged && restaurant) {
       db.collection("favorites")
@@ -62,26 +61,48 @@ export default function Restaurant(props) {
 
   const addFavorite = () => {
     if (!userLogged) {
-      toastRef.current.show("Tienes que estar logeado");
+      toastRef.current.show(
+        "Para usar el sistema de favoritos tienes que estar logeado"
+      );
     } else {
       const payload = {
         idUser: firebase.auth().currentUser.uid,
-        idRestaurant: restaurant,
+        idRestaurant: restaurant.id,
       };
       db.collection("favorites")
         .add(payload)
         .then(() => {
           setIsFavorite(true);
-          toastRef.current.show("Añadido a favoritos correctamente");
+          toastRef.current.show("Restaurante añadido a favoritos");
         })
         .catch(() => {
-          toastRef.current.show("Error, intenta de nuevo");
+          toastRef.current.show("Error al añadir el restaurnate a favoritos");
         });
     }
   };
 
   const removeFavorite = () => {
-    console.log("remove favorite");
+    db.collection("favorites")
+      .where("idRestaurant", "==", restaurant.id)
+      .where("idUser", "==", firebase.auth().currentUser.uid)
+      .get()
+      .then((response) => {
+        response.forEach((doc) => {
+          const idFavorite = doc.id;
+          db.collection("favorites")
+            .doc(idFavorite)
+            .delete()
+            .then(() => {
+              setIsFavorite(false);
+              toastRef.current.show("Restaurante eliminado de favoritos");
+            })
+            .catch(() => {
+              toastRef.current.show(
+                "Error al eliminar el restaurante de favoritos"
+              );
+            });
+        });
+      });
   };
 
   if (!restaurant) return <Loading isVisible={true} text="Cargando..." />;
@@ -148,6 +169,18 @@ function RestaurantInfo(props) {
       iconType: "material-community",
       action: null,
     },
+    {
+      text: "111 222 333",
+      iconName: "phone",
+      iconType: "material-community",
+      action: null,
+    },
+    {
+      text: "xAgustin93@gmail.com",
+      iconName: "at",
+      iconType: "material-community",
+      action: null,
+    },
   ];
 
   return (
@@ -155,7 +188,7 @@ function RestaurantInfo(props) {
       <Text style={styles.restaurantInfoTitle}>
         Información sobre el restaurante
       </Text>
-      <Map location={location} name={name} height={150} />
+      <Map location={location} name={name} height={100} />
       {map(listInfo, (item, index) => (
         <ListItem
           key={index}
