@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Image, Icon, Button } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
-import { size } from "lodash";
 import Loading from "../components/Loading";
 
 import { firebaseApp } from "../utils/firebase";
@@ -21,7 +20,7 @@ const db = firebase.firestore(firebaseApp);
 
 const Favorites = (props) => {
   const { navigation } = props;
-  const [restaurants, setRestaurants] = useState([]);
+  const [restaurants, setRestaurants] = useState(null);
   const [userLogged, setUserLogged] = useState(false);
 
   firebase.auth().onAuthStateChanged((user) => {
@@ -67,13 +66,24 @@ const Favorites = (props) => {
     return <UserNoLogged navigation={navigation} />;
   }
 
-  if (size(restaurants) === 0) {
+  if (restaurants?.length === 0) {
     return <NotFoundRestaurants />;
   }
 
   return (
-    <View>
-      <Text> Favorites ... </Text>
+    <View style={styles.viewBody}>
+      {restaurants ? (
+        <FlatList
+          data={restaurants}
+          renderItem={(restaurant) => <Restaurant restaurant={restaurant} />}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      ) : (
+        <View style={styles.loaderRestaurants}>
+          <ActivityIndicator size="large" />
+          <Text>Cargando restaurantes</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -108,6 +118,60 @@ function UserNoLogged(props) {
   );
 }
 
+function Restaurant(props) {
+  const {
+    restaurant,
+    setIsLoading,
+    toastRef,
+    setReloadData,
+    navigation,
+  } = props;
+  const { id, name, images } = restaurant.item;
+  return (
+    <View>
+      <Text>{name}</Text>
+    </View>
+  );
+}
+
 export default Favorites;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  viewBody: {
+    flex: 1,
+    backgroundColor: "#f2f2f2",
+  },
+  loaderRestaurants: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  restaurant: {
+    margin: 10,
+  },
+  image: {
+    width: "100%",
+    height: 180,
+  },
+  info: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: -30,
+    backgroundColor: "#fff",
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  favorite: {
+    marginTop: -35,
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 100,
+  },
+});
