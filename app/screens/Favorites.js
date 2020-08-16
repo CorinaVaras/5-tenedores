@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { Image, Icon, Botton } from "react-native-elements";
+import { Image, Icon, Button } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
 import { size } from "lodash";
 import Loading from "../components/Loading";
@@ -19,8 +19,9 @@ import "firebase/firestore";
 
 const db = firebase.firestore(firebaseApp);
 
-const Favorites = () => {
-  const [restaurants, setRestaurants] = useState(null);
+const Favorites = (props) => {
+  const { navigation } = props;
+  const [restaurants, setRestaurants] = useState([]);
   const [userLogged, setUserLogged] = useState(false);
 
   firebase.auth().onAuthStateChanged((user) => {
@@ -62,9 +63,11 @@ const Favorites = () => {
     return Promise.all(arrayRestaurants);
   };
 
-  if (!restaurants) {
-    return <Loading isVisible={true} text="Cargando restaurantes" />;
-  } else if (size(restaurants) === 0) {
+  if (!userLogged) {
+    return <UserNoLogged navigation={navigation} />;
+  }
+
+  if (size(restaurants) === 0) {
     return <NotFoundRestaurants />;
   }
 
@@ -82,6 +85,25 @@ function NotFoundRestaurants() {
       <Text style={{ fontSize: 20 }}>
         No tienes restaurantes en tus favoritos
       </Text>
+    </View>
+  );
+}
+
+function UserNoLogged(props) {
+  const { navigation } = props;
+
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Icon type="material-community" name="alert-outline" size={60} />
+      <Text style={{ fontSize: 20, textAlign: "center" }}>
+        Necesitas estar logeado para ver esta sección
+      </Text>
+      <Button
+        title="Iniciar sesión"
+        containerStyle={{ marginTop: 20, width: "80%" }}
+        buttonStyle={{ backgroundColor: "#00a680" }}
+        onPress={() => navigation.navigate("account", { screen: "login" })}
+      />
     </View>
   );
 }
