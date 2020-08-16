@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import Toast from "react-native-easy-toast";
+import ListTopRestaurants from "../components/Ranking/ListTopRestaurants";
 
 import { firebaseApp } from "../utils/firebase";
 import firebase from "firebase/app";
@@ -10,7 +11,7 @@ const db = firebase.firestore(firebaseApp);
 
 const TopRestaurants = (props) => {
   const { navigation } = props;
-  const [restaurant, setRestaurant] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
   const ToastRef = useRef();
 
   //Obtener los restaurantes top 5
@@ -32,12 +33,10 @@ const TopRestaurants = (props) => {
 
   return (
     <View>
-      <Text> Top restaurants</Text>
+      <ListTopRestaurants restaurants={restaurants} navigation={navigation} />
       <Toast ref={ToastRef} position="center" opacity={0.9} />
     </View>
   );
 };
 
 export default TopRestaurants;
-
-const styles = StyleSheet.create({});
