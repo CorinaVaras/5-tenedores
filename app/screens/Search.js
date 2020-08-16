@@ -6,7 +6,7 @@ import firebase from "firebase/app";
 
 const fireSQL = new FireSQL(firebase.firestore(), { includeId: "id" });
 
-const Search = (props) => {
+export default function Search(props) {
   const { navigation } = props;
   const [search, setSearch] = useState("");
   const [restaurants, setRestaurants] = useState([]);
@@ -29,11 +29,28 @@ const Search = (props) => {
         value={search}
         containerStyle={styles.searchBar}
       />
+      {restaurants.length === 0 ? (
+        <NoFoundRestaurants />
+      ) : (
+        <View>
+          <Text>Resultado......</Text>
+        </View>
+      )}
     </View>
   );
-};
+}
 
-export default Search;
+function NoFoundRestaurants() {
+  return (
+    <View style={{ flex: 1, alignItems: "center" }}>
+      <Image
+        source={require("../../assets/no-result-found.png")}
+        resizeMode="cover"
+        style={{ width: 200, height: 200 }}
+      />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   searchBar: {
