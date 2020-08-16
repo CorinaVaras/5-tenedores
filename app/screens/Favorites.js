@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Image, Icon, Button } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
+import Toast from "react-native-easy-toast";
 import Loading from "../components/Loading";
 
 import { firebaseApp } from "../utils/firebase";
@@ -22,6 +23,9 @@ const Favorites = (props) => {
   const { navigation } = props;
   const [restaurants, setRestaurants] = useState(null);
   const [userLogged, setUserLogged] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [reloadData, setReloadData] = useState(false);
+  const toastRef = useRef();
 
   firebase.auth().onAuthStateChanged((user) => {
     user ? setUserLogged(true) : setUserLogged(false);
@@ -50,7 +54,8 @@ const Favorites = (props) => {
             });
           });
       }
-    }, [userLogged])
+      setReloadData(false);
+    }, [userLogged, reloadData])
   );
 
   const getDataRestaurant = (idRestaurantsArray) => {
@@ -75,7 +80,15 @@ const Favorites = (props) => {
       {restaurants ? (
         <FlatList
           data={restaurants}
-          renderItem={(restaurant) => <Restaurant restaurant={restaurant} />}
+          renderItem={(restaurant) => (
+            <Restaurant
+              restaurant={restaurant}
+              setIsLoading={setIsLoading}
+              toastRef={toastRef}
+              setReloadData={setReloadData}
+              navigation={navigation}
+            />
+          )}
           keyExtractor={(item, index) => index.toString()}
         />
       ) : (
@@ -84,6 +97,8 @@ const Favorites = (props) => {
           <Text style={{ textAlign: "center" }}>Cargando restaurantes</Text>
         </View>
       )}
+      <Toast ref={toastRef} position="center" opacity={0.9} />
+      <Loading text="Eliminando restaurante" isVisible={isLoading} />
     </View>
   );
 };
@@ -127,6 +142,50 @@ function Restaurant(props) {
     navigation,
   } = props;
   const { id, name, images } = restaurant.item;
+
+  const confirmRemoveFavorite = () => {
+    Alert.alert(
+      "Eliminar Restaurante de Favoritos",
+      "¿Estas seguro de que quieres eliminar el restaurante de favoritos?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: removeFavorite,
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const removeFavorite = () => {
+    setIsLoading(true);
+    db.collection("favorites")
+      .where("idRestaurant", "==", id)
+      .where("idUser", "==", firebase.auth().currentUser.uid)
+      .get()
+      .then((response) => {
+        response.forEach((doc) => {
+          const idFavorite = doc.id;
+          db.collection("favorites")
+            .doc(idFavorite)
+            .delete()
+            .then(() => {
+              setIsLoading(false);
+              setReloadData(true);
+              toastRef.current.show("Restaurante eliminado correctamente");
+            })
+            .catch(() => {
+              setIsLoading(false);
+              toastRef.current.show("Error al eliminar el restaurante");
+            });
+        });
+      });
+  };
+
   return (
     <View style={styles.restaurant}>
       <TouchableOpacity onPress={() => console.log("IR")} />
@@ -147,7 +206,7 @@ function Restaurant(props) {
           name="heart"
           color="#f00"
           containerStyle={styles.favorite}
-          onPress={() => console.log("remove")}
+          onPress={confirmRemoveFavorite}
           underlayColor="transparent"
         />
       </View>
