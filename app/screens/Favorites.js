@@ -188,28 +188,36 @@ function Restaurant(props) {
 
   return (
     <View style={styles.restaurant}>
-      <TouchableOpacity onPress={() => console.log("IR")} />
-      <Image
-        resizeMode="cover"
-        style={styles.image}
-        PlaceholderContent={<ActivityIndicator color="#fff" />}
-        source={
-          images[0]
-            ? { uri: images[0] }
-            : require("../../assets/img/no-image.png")
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("restaurants", {
+            screen: "restaurant",
+            params: { id },
+          })
         }
-      />
-      <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
-        <Icon
-          type="material-community"
-          name="heart"
-          color="#f00"
-          containerStyle={styles.favorite}
-          onPress={confirmRemoveFavorite}
-          underlayColor="transparent"
+      >
+        <Image
+          resizeMode="cover"
+          style={styles.image}
+          PlaceholderContent={<ActivityIndicator color="#fff" />}
+          source={
+            images[0]
+              ? { uri: images[0] }
+              : require("../../assets/img/no-image.png")
+          }
         />
-      </View>
+        <View style={styles.info}>
+          <Text style={styles.name}>{name}</Text>
+          <Icon
+            type="material-community"
+            name="heart"
+            color="#f00"
+            containerStyle={styles.favorite}
+            onPress={confirmRemoveFavorite}
+            underlayColor="transparent"
+          />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
