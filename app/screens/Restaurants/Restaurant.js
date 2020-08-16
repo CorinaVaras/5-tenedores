@@ -45,6 +45,20 @@ export default function Restaurant(props) {
         });
     }, [])
   );
+  // Obteniendo si el restaurant lo tenemos en fav's
+  useEffect(() => {
+    if (userLogged && restaurant) {
+      db.collection("favorites")
+        .where("idRestaurant", "==", restaurant.id)
+        .where("idUser", "==", firebase.auth().currentUser.uid)
+        .get()
+        .then((response) => {
+          if (response.docs.length === 1) {
+            setIsFavorite(true);
+          }
+        });
+    }
+  }, [userLogged, restaurant]);
 
   const addFavorite = () => {
     if (!userLogged) {
