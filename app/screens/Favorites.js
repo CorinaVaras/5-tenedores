@@ -81,7 +81,7 @@ const Favorites = (props) => {
       ) : (
         <View style={styles.loaderRestaurants}>
           <ActivityIndicator size="large" />
-          <Text>Cargando restaurantes</Text>
+          <Text style={{ textAlign: "center" }}>Cargando restaurantes</Text>
         </View>
       )}
     </View>
@@ -128,8 +128,29 @@ function Restaurant(props) {
   } = props;
   const { id, name, images } = restaurant.item;
   return (
-    <View>
-      <Text>{name}</Text>
+    <View style={styles.restaurant}>
+      <TouchableOpacity onPress={() => console.log("IR")} />
+      <Image
+        resizeMode="cover"
+        style={styles.image}
+        PlaceholderContent={<ActivityIndicator color="#fff" />}
+        source={
+          images[0]
+            ? { uri: images[0] }
+            : require("../../assets/img/no-image.png")
+        }
+      />
+      <View style={styles.info}>
+        <Text style={styles.name}>{name}</Text>
+        <Icon
+          type="material-community"
+          name="heart"
+          color="#f00"
+          containerStyle={styles.favorite}
+          onPress={() => console.log("remove")}
+          underlayColor="transparent"
+        />
+      </View>
     </View>
   );
 }
