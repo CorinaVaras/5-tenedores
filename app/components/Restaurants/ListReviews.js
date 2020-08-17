@@ -55,7 +55,11 @@ export default function ListReviews(props) {
         <View>
           <Text
             style={{ textAlign: "center", color: "#00a680", padding: 20 }}
-            onPress={() => navigation.navigate("login")}
+            onPress={() =>
+              navigation.navigate("account", {
+                screen: "login",
+              })
+            }
           >
             Para escribir un comentario es necesario estar logeado{" "}
             <Text style={{ fontWeight: "bold" }}>

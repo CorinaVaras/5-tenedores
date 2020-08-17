@@ -20,7 +20,7 @@ export default function Login() {
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
-      <Text>Social login</Text>
+      {/* <Text>Social login</Text> */}
       <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   logo: {
     width: "100%",
     height: 150,
-    marginTop: 20,
+    marginTop: 25,
   },
   viewContainer: {
     marginRight: 40,

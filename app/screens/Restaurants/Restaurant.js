@@ -175,12 +175,6 @@ function RestaurantInfo(props) {
       iconType: "material-community",
       action: null,
     },
-    {
-      text: "xAgustin93@gmail.com",
-      iconName: "at",
-      iconType: "material-community",
-      action: null,
-    },
   ];
 
   return (

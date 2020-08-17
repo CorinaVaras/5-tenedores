@@ -99,14 +99,14 @@ export default function AddReviewRestaurant(props) {
           onChange={(e) => setReview(e.nativeEvent.text)}
         />
         <Button
-          title="Enviar Comnetario"
+          title="Enviar Comentario"
           containerStyle={styles.btnContainer}
           buttonStyle={styles.btn}
           onPress={addRevew}
         />
       </View>
       <Toast ref={toastRef} position="center" opacity={0.9} />
-      <Loading isVisible={isLoading} text="Enviando comenario" />
+      <Loading isVisible={isLoading} text="Enviando comentario" />
     </View>
   );
 }
