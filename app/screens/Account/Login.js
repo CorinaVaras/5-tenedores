@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   logo: {
     width: "100%",
     height: 150,
-    marginTop: 35,
+    marginTop: 80,
   },
   viewContainer: {
     marginRight: 40,
