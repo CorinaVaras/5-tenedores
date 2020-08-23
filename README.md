@@ -30,10 +30,6 @@ Nuestro público objetivo va dirigido a dos tipos de usuarios, dueños de restau
 
 - Toast compatibles con Android y iOS.
 
-## Interfaz de usuario
-
-![](./assets/img/demo1.png)
-
 ## Flujo de la App
 
 ![](./assets/img/img1.png)
