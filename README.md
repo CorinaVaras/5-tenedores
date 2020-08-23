@@ -34,6 +34,11 @@ Nuestro público objetivo va dirigido a dos tipos de usuarios, dueños de restau
 
 ![](./assets/img/demo1.png)
 
+## Flujo de la App
+
+![](./assets/img/img1.png)
+![](./assets/img/img2.png)
+
 ## Link de la App 📱
 
 Puedes encontrar la app publicada en Expo en el siguiente [link](https://expo.io/@corinavaras/5-tenedores)
