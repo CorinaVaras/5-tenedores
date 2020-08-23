@@ -32,7 +32,7 @@ Nuestro público objetivo va dirigido a dos tipos de usuarios, dueños de restau
 
 ## Interfaz de usuario
 
-![](./assets/img/demo-5tenedores.png)
+![](./assets/img/demo1.png)
 
 ## Link de la App 📱
 
