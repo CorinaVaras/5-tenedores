@@ -1,5 +1,3 @@
-![](./assets/img/logo-5.png)
-
 ## Definición del producto
 
 Es una app de TripAdvisor de restaurantes, donde podrás publicar tu restaurante y muchas cosas más.
